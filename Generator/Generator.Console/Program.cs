@@ -4,8 +4,8 @@ using CommandLine;
 using Generator;
 using Generator.Console;
 
-Parser.Default.ParseArguments<Options>(args)
-    .WithParsed(async o =>
+var options = Parser.Default.ParseArguments<Options>(args)
+    .WithParsed(o =>
     {
         try
         {
@@ -26,20 +26,21 @@ Parser.Default.ParseArguments<Options>(args)
             Console.WriteLine("Invalid output file name");
             Environment.Exit(1);
         }
+    })
+    .WithNotParsed((_) => Environment.Exit(1));
 
-        try
-        {
-            var watch = new Stopwatch();
-            watch.Start();
+try
+{
+    var watch = new Stopwatch();
+    watch.Start();
 
-            await using var generator = GenerationFacadeFactory.CreateFileGenerationFacade(o.FilePath, o.FileSizeBytes);
-            await generator.GenerateAsync();
+    await using var generator = GenerationFacadeFactory.CreateFileGenerationFacade(options.Value.FilePath, options.Value.FileSizeBytes);
+    await generator.GenerateAsync();
 
-            Console.WriteLine($"Generation is successfully finished. It took {watch.Elapsed}");
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Unexpected error occurred: {e}");
-            Environment.Exit(1);
-        }
-    });
+    Console.WriteLine($"Generation is successfully finished. It took {watch.Elapsed}");
+}
+catch (Exception e)
+{
+    Console.WriteLine($"Unexpected error occurred: {e}");
+    Environment.Exit(1);
+}

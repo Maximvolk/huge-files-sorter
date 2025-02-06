@@ -10,7 +10,7 @@
 
         public FileWriter(string filePath)
         {
-            _fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 65535);
+            _fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 64 * 1024);
             _streamWriter = new StreamWriter(_fileStream);
         }
 

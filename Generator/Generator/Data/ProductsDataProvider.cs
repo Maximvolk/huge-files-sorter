@@ -1,5 +1,5 @@
-﻿using Bogus;
-using System.Text;
+﻿using System.Text;
+using Bogus;
 
 namespace Generator.Data
 {
@@ -24,7 +24,7 @@ namespace Generator.Data
         private static long EstimateTotalLinesCount(long totalSizeInBytes)
         {
             var faker = new Faker(locale: "en");
-            var exampleString = $"{100L}. {faker.Commerce.ProductName()} {faker.Commerce.ProductAdjective()} {faker.Commerce.ProductMaterial()}{Environment.NewLine}";
+            var exampleString = $"{100L}. {faker.Commerce.Product()} {faker.Commerce.ProductAdjective()} {faker.Commerce.ProductMaterial()}{Environment.NewLine}";
 
             var estimateStringSize = Encoding.UTF8.GetByteCount(exampleString);
             return (long)Math.Ceiling(totalSizeInBytes / (double)estimateStringSize);
@@ -33,7 +33,7 @@ namespace Generator.Data
         private static List<string> GenerateProductsPool(int size)
         {
             var faker = new Faker(locale: "en");
-            return Enumerable.Range(0, size).Select(_ => faker.Commerce.ProductName()).ToList();
+            return Enumerable.Range(0, size).Select(_ => faker.Commerce.Product()).ToList();
         }
 
         private static List<string> GenerateProductAdjectivesPool(int size)
@@ -50,7 +50,7 @@ namespace Generator.Data
 
         public string GetLine()
         {
-            var number = Random.Shared.Next(1, (int)(_totalLinesEstimate * 0.75));
+            var number = Random.Shared.Next(1, (int)(_totalLinesEstimate * 0.9));
 
             if (number % 10 == 0)
                 return $"{number}. {_products.Value[Random.Shared.Next(_products.Value.Count)]}";
@@ -59,7 +59,7 @@ namespace Generator.Data
             var adjective = _productAdjectives.Value[Random.Shared.Next(_productAdjectives.Value.Count)];
             var material = _productMaterials.Value[Random.Shared.Next(_productMaterials.Value.Count)];
 
-            return $"{number}. {product} {adjective} {material}";
+            return $"{number}. {adjective} {material} {product}";
         }
     }
 }
