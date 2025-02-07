@@ -27,7 +27,7 @@ var options = Parser.Default.ParseArguments<Options>(args)
             Environment.Exit(1);
         }
     })
-    .WithNotParsed((_) => Environment.Exit(1));
+    .WithNotParsed(_ => Environment.Exit(1));
 
 try
 {

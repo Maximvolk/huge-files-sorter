@@ -13,8 +13,11 @@ namespace Generator.Data
 
         public ProductsDataProvider(long totalSizeInBytes)
         {
+            // 3 pools of strings => total combinations number is first * second * third
+            // Assuming that all pools have the same size (for simplicity) it equals cube root on total lines
+            // 0.9 coefficient is to guarantee duplicate lines (because total number of combinations won't be "enough")
             _totalLinesEstimate = EstimateTotalLinesCount(totalSizeInBytes);
-            var poolSize = (int)Math.Ceiling(Math.Cbrt(_totalLinesEstimate * 0.75));
+            var poolSize = (int)Math.Ceiling(Math.Cbrt(_totalLinesEstimate * 0.9));
 
             _products = new(() => GenerateProductsPool(poolSize));
             _productAdjectives = new(() => GenerateProductAdjectivesPool(poolSize));
