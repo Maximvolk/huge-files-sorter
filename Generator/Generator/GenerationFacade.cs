@@ -8,12 +8,14 @@ namespace Generator
 {
     public sealed class GenerationFacade : IAsyncDisposable
     {
-        private const int _channelCapacity = 1000;
-        private const int _batchSize = 1000;
+        private const int ChannelCapacity = 1000;
+        private const int BatchSize = 1000;
 
         private readonly IDataProvider _dataProvider;
         private readonly IOutputWriter _outputWriter;
         private readonly long _targetSizeInBytes;
+        
+        private readonly int _newLineLength = Encoding.UTF8.GetByteCount(Environment.NewLine);
 
         internal GenerationFacade(IDataProvider dataProvider, IOutputWriter outputWriter, long targetSizeInBytes)
         {
@@ -24,7 +26,7 @@ namespace Generator
 
         public async Task GenerateAsync()
         {
-            var channel = Channel.CreateBounded<List<string>>(new BoundedChannelOptions(_channelCapacity)
+            var channel = Channel.CreateBounded<List<string>>(new BoundedChannelOptions(ChannelCapacity)
             {
                 FullMode = BoundedChannelFullMode.Wait,
                 SingleReader = true,
@@ -56,12 +58,12 @@ namespace Generator
 
             while (currentSize < targetSizeInBytes)
             {
-                var batch = new List<string>(_batchSize);
+                var batch = new List<string>(BatchSize);
 
-                for (var i = 0; i < _batchSize && currentSize < targetSizeInBytes; i++)
+                for (var i = 0; i < BatchSize && currentSize < targetSizeInBytes; i++)
                 {
                     var line = _dataProvider.GetLine();
-                    currentSize += Encoding.UTF8.GetByteCount(line) + 2;
+                    currentSize += Encoding.UTF8.GetByteCount(line) + _newLineLength;
 
                     batch.Add(line);
                 }

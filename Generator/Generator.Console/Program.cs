@@ -26,6 +26,16 @@ var options = Parser.Default.ParseArguments<Options>(args)
             Console.WriteLine("Invalid output file name");
             Environment.Exit(1);
         }
+
+        try
+        {
+            _ = o.FileSizeBytes;
+        }
+        catch
+        {
+            Console.WriteLine("Invalid size, only K, M and G suffixes supported");
+            Environment.Exit(1);
+        }
     })
     .WithNotParsed(_ => Environment.Exit(1));
 
