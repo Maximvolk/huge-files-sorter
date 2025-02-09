@@ -11,11 +11,15 @@ namespace Sorter
 
             while ((chunks = Directory.EnumerateFiles(tmpDirectory).ToList()).Count > 1)
             {
+                Console.WriteLine("\nMerge epoch...");
+                
                 for (var i = 0; i < chunks.Count; i += MaxOpenChunks)
                 {
                     var chunksBatch = chunks.Skip(i).Take(MaxOpenChunks).ToList();
                     MergeSortedChunksBatch(chunksBatch);
                 }
+
+                Console.WriteLine($"{chunks.Count} chunks left");
             }
 
             File.Move(chunks[0], outputFilePath, true);

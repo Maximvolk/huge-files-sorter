@@ -8,7 +8,11 @@ namespace Sorter
         {
             var fileSizeBytes = new FileInfo(inputFilePath).Length;
             var chunksCount = (int)Math.Ceiling(fileSizeBytes / (double)ChunkSize);
-            
+
+            Console.WriteLine(chunksCount == 1
+                ? "Sorting in memory (only one chunk)..."
+                : $"Splitting into {chunksCount} chunks...");
+
             var maxDegreeOfParallelism = Environment.ProcessorCount;
 
             foreach (var chunkIndices in Enumerable.Range(0, chunksCount).GroupBy(i => i / maxDegreeOfParallelism))
@@ -22,6 +26,10 @@ namespace Sorter
                 }).ToList();
                 
                 await Task.WhenAll(tasks);
+
+                var chunksCreatedCount = chunkIndices.Max() + 1;
+                if (chunksCreatedCount > 1)
+                    Console.WriteLine($"{chunkIndices.Max() + 1} chunks created");
             }
         }
 

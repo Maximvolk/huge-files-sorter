@@ -5,7 +5,7 @@
         private const string TmpDirectory = "sorterTmp";
 
         private readonly ChunksMerger _chunksMerger = new(TmpDirectory);
-        private readonly FilePartitioner _partitioner = new(TmpDirectory);
+        private readonly FilePartitioner _filePartitioner = new(TmpDirectory);
         
         public async Task SortAsync(string inputFilePath, string outputFilePath)
         {
@@ -16,7 +16,7 @@
 
             try
             {
-                await _partitioner.SplitIntoSortedChunksAsync(inputFilePath);
+                await _filePartitioner.SplitIntoSortedChunksAsync(inputFilePath);
                 _chunksMerger.MergeSortedChunks(outputFilePath);
             }
             finally
