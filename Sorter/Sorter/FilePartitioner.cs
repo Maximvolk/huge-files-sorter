@@ -1,20 +1,35 @@
 namespace Sorter
 {
-    public class SortingPartitioner(int chunkSize, string tmpDirectory)
+    public class FilePartitioner(string tmpDirectory)
     {
-        public async Task SplitIntoSortedChunksAsync(string inputFilePath, int chunkIndex)
+        private const int ChunkSize = 10 * 1024 * 1024; // 10 MB
+        
+        public async Task SplitIntoSortedChunksAsync(string inputFilePath)
         {
-            var chunk = await ReadChunkAsync(inputFilePath, chunkIndex);
-            chunk.Sort();
+            var fileSizeBytes = new FileInfo(inputFilePath).Length;
+            var chunksCount = (int)Math.Ceiling(fileSizeBytes / (double)ChunkSize);
+            
+            var maxDegreeOfParallelism = Environment.ProcessorCount;
 
-            await WriteChunkToTempFileAsync(chunk);
+            foreach (var chunkIndices in Enumerable.Range(0, chunksCount).GroupBy(i => i / maxDegreeOfParallelism))
+            {
+                var tasks = chunkIndices.Select(async i =>
+                {
+                    var chunk = await ReadChunkAsync(inputFilePath, i);
+                    chunk.Sort();
+
+                    await WriteChunkToTempFileAsync(chunk);
+                }).ToList();
+                
+                await Task.WhenAll(tasks);
+            }
         }
 
         private async Task<List<Line>> ReadChunkAsync(string filePath, int chunkIndex)
         {
             await using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 64 * 1024);
 
-            var startPosition = chunkIndex * chunkSize;
+            var startPosition = chunkIndex * ChunkSize;
             fileStream.Position = startPosition;
 
             using var streamReader = new StreamReader(fileStream);
@@ -32,7 +47,7 @@ namespace Sorter
                     lines.Add(lineParsed.Value);
 
                 var bytesRead = fileStream.Position - startPosition;
-                if (bytesRead > chunkSize)
+                if (bytesRead > ChunkSize)
                     break;
             }
 

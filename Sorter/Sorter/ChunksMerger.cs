@@ -1,6 +1,6 @@
 namespace Sorter
 {
-    public class Merger(string tmpDirectory)
+    public class ChunksMerger(string tmpDirectory)
     {
         private const int MaxOpenChunks = 100;
 
