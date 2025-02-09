@@ -13,15 +13,18 @@ namespace Generator
 
         private readonly IDataProvider _dataProvider;
         private readonly IOutputWriter _outputWriter;
+        private readonly IProgressObserver _progressObserver;
         private readonly long _targetSizeInBytes;
         
         private readonly int _newLineLength = Encoding.UTF8.GetByteCount(Environment.NewLine);
 
-        internal GenerationFacade(IDataProvider dataProvider, IOutputWriter outputWriter, long targetSizeInBytes)
+        internal GenerationFacade(IDataProvider dataProvider, IOutputWriter outputWriter,
+            long targetSizeInBytes, IProgressObserver progressObserver)
         {
             _dataProvider = dataProvider;
             _outputWriter = outputWriter;
             _targetSizeInBytes = targetSizeInBytes;
+            _progressObserver = progressObserver;
         }
 
         public async Task GenerateAsync()
@@ -67,18 +70,27 @@ namespace Generator
 
                     batch.Add(line);
                 }
-
+                
                 await writer.WriteAsync(batch);
             }
         }
 
         private async Task WriteOutputAsync(ChannelReader<List<string>> reader)
         {
+            var bytesWritten = 0L;
+            
             await foreach (var batch in reader.ReadAllAsync())
             {
                 foreach (var line in batch)
+                {
                     await _outputWriter.WriteLineAsync(line);
+                    bytesWritten += Encoding.UTF8.GetByteCount(line) + _newLineLength;
+                }
+
+                _progressObserver.ObserveProgress(bytesWritten / (double)_targetSizeInBytes);
             }
+            
+            _progressObserver.Finish();
         }
 
         public async ValueTask DisposeAsync()

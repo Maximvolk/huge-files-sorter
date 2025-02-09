@@ -5,7 +5,7 @@ namespace Generator
 {
     public static class GenerationFacadeFactory
     {
-        public static GenerationFacade CreateFileGenerationFacade(string filePath, long targetSizeInBytes)
+        public static GenerationFacade CreateFileGenerationFacade(string filePath, long targetSizeInBytes, IProgressObserver progressObserver)
         {
             // Products provider is good for small files
             // Companies provider supports bigger number of combinations and leads to smaller amount of duplicates on a big files
@@ -17,7 +17,7 @@ namespace Generator
             
             var outputWriter = new FileWriter(filePath);
 
-            return new GenerationFacade(dataProvider, outputWriter, targetSizeInBytes);
+            return new GenerationFacade(dataProvider, outputWriter, targetSizeInBytes, progressObserver);
         }
     }
 }

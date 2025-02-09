@@ -41,10 +41,15 @@ var options = Parser.Default.ParseArguments<Options>(args)
 
 try
 {
+    Console.Write("Generation is in progress... ");
+    var progressBar = new ProgressBar();
+    
     var watch = new Stopwatch();
     watch.Start();
 
-    await using var generator = GenerationFacadeFactory.CreateFileGenerationFacade(options.Value.FilePath, options.Value.FileSizeBytes);
+    await using var generator = GenerationFacadeFactory.CreateFileGenerationFacade(
+        options.Value.FilePath, options.Value.FileSizeBytes, progressBar)
+        ;
     await generator.GenerateAsync();
 
     Console.WriteLine($"Generation is successfully finished. It took {watch.Elapsed}");
