@@ -7,6 +7,12 @@ namespace Sorter
         public async Task SplitIntoSortedChunksAsync(string inputFilePath)
         {
             var fileSizeBytes = new FileInfo(inputFilePath).Length;
+            if (fileSizeBytes == 0)
+            {
+                await WriteChunkToTempFileAsync([]);
+                return;
+            }
+
             var chunksCount = (int)Math.Ceiling(fileSizeBytes / (double)ChunkSize);
 
             logger.LogLine(chunksCount == 1
