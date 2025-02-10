@@ -83,7 +83,8 @@ namespace Sorter.Tests
 
             // Assert
             var chunkFiles = Directory.GetFiles(_tempDirectory, "chunk_*.txt");
-            Assert.That(chunkFiles, Is.Empty, "Empty file should create no chunks");
+            Assert.That(chunkFiles, Has.Length.EqualTo(1));
+            Assert.That(await File.ReadAllTextAsync(chunkFiles[0]), Is.Empty, "Empty file should create no chunks");
         }
 
         private async Task CreateLargeFile(string filePath, int sizeInBytes)
