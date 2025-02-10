@@ -1,7 +1,7 @@
 ![dotnet](https://img.shields.io/badge/.NET-512BD4?style=flat&logo=.net&logoColor=white)
 ![GitHub Release](https://img.shields.io/github/v/release/Maximvolk/huge-files-sorter)
 
-# Huge files generation and sorting utilities
+# Huge files generation and sorting
 
 ### Generator
 
