@@ -42,7 +42,7 @@ namespace Sorter
                     logger.LogFromFixedPosition($"Created {chunksCreatedCount}/{chunksCount} chunks");
             }
 
-            logger.LogLine("\n");
+            logger.LogLine(string.Empty);
         }
 
         private async Task<List<Line>> ReadChunkAsync(string filePath, int chunkIndex)
