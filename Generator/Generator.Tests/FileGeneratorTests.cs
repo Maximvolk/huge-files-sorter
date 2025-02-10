@@ -23,7 +23,7 @@
         [TestCase(1024 * 1024)] // 1 MB
         [TestCase(10 * 1024 * 1024)] // 10 MB
         [TestCase(150 * 1024 * 1024)] // 150 MB
-        public async Task GenerateAsync_CreatesFileWithSpecifiedSize_WithinAcceptableTolerance(long targetSize)
+        public async Task CreatesFileWithSpecifiedSize_WithinAcceptableTolerance(long targetSize)
         {
             // Arrange
             const double tolerancePercentage = 0.05;
@@ -46,7 +46,7 @@
         }
 
         [Test]
-        public async Task GenerateAsync_HandlesSmallFiles()
+        public async Task HandlesSmallFiles()
         {
             // Arrange
             const long verySmallSize = 100; // 100 bytes
@@ -66,7 +66,7 @@
         }
 
         [Test]
-        public async Task GenerateAsync_CreatesValidTextFile()
+        public async Task CreatesValidTextFile()
         {
             // Arrange
             await using (var generator = GenerationFacadeFactory.CreateFileGenerationFacade(OutputPath, 1024, _progressObserver))

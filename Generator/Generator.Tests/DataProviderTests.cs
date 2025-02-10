@@ -24,7 +24,7 @@ namespace Generator.Tests
 
         [Test]
         [TestCaseSource(nameof(Providers), new object[] { 1024 })]
-        public void GetLine_ReturnsCorrectFormat(IDataProvider dataProvider)
+        public void ReturnsCorrectFormat(IDataProvider dataProvider)
         {
             // Act
             var line = dataProvider.GetLine();
@@ -36,7 +36,7 @@ namespace Generator.Tests
 
         [Test]
         [TestCaseSource(nameof(Providers), new object[] { 10 * 1024 })]
-        public void GetLine_GeneratesDuplicateStrings(IDataProvider dataProvider)
+        public void GeneratesDuplicateStrings(IDataProvider dataProvider)
         {
             // Arrange
             var strings = new HashSet<string>();
@@ -48,7 +48,7 @@ namespace Generator.Tests
             while (totalSize < 10 * 1024)
             {
                 var line = dataProvider.GetLine();
-                var stringPart = line[(line.IndexOf(". ") + 2)..];
+                var stringPart = line[(line.IndexOf(". ", StringComparison.Ordinal) + 2)..];
 
                 if (!strings.Add(stringPart))
                     duplicateCount++;
