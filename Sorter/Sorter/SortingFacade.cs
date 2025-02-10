@@ -6,7 +6,7 @@
 
         private readonly ChunksMerger _chunksMerger = new(TmpDirectory, logger);
         private readonly FilePartitioner _filePartitioner = new(TmpDirectory, logger);
-        
+
         public async Task SortAsync(string inputFilePath, string outputFilePath)
         {
             if (Directory.Exists(TmpDirectory))

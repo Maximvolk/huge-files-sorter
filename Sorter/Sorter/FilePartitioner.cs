@@ -3,7 +3,7 @@ namespace Sorter
     public class FilePartitioner(string tmpDirectory, ILogger logger)
     {
         private const long ChunkSize = 10 * 1024 * 1024; // 10 MB
-        
+
         public async Task SplitIntoSortedChunksAsync(string inputFilePath)
         {
             var fileSizeBytes = new FileInfo(inputFilePath).Length;
@@ -24,6 +24,7 @@ namespace Sorter
 
             logger.FixPosition();
 
+            // Create groups of chunks in parallel
             foreach (var chunkIndices in Enumerable.Range(0, chunksCount).GroupBy(i => i / maxDegreeOfParallelism))
             {
                 var tasks = chunkIndices.Select(async i =>
@@ -33,7 +34,7 @@ namespace Sorter
 
                     await WriteChunkToTempFileAsync(chunk);
                 }).ToList();
-                
+
                 await Task.WhenAll(tasks);
 
                 chunksCreatedCount += chunkIndices.Count();

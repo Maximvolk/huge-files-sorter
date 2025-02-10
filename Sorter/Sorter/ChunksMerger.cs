@@ -10,11 +10,12 @@ namespace Sorter
             List<string> chunks;
             var mergeEpoch = 1;
 
+            // Merge every MaxOpenChunks to a single file repeatedly until only one chunk left
             while ((chunks = Directory.EnumerateFiles(tmpDirectory).ToList()).Count > 1)
             {
                 logger.LogLine($"\nMerge epoch {mergeEpoch}...");
                 var chunksLeft = chunks.Count;
-                
+
                 for (var i = 0; i < chunks.Count; i += MaxOpenChunks)
                 {
                     var chunksBatch = chunks.Skip(i).Take(MaxOpenChunks).ToList();
