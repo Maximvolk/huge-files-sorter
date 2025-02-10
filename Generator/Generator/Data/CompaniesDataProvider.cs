@@ -3,6 +3,9 @@ using Bogus;
 
 namespace Generator.Data
 {
+    /// <summary>
+    /// Creates strings with three companies names separated with comma (for larger variability)
+    /// </summary>
     public class CompaniesDataProvider : IDataProvider
     {
         private readonly long _totalLinesEstimate;
@@ -21,6 +24,7 @@ namespace Generator.Data
             _totalLinesEstimate = EstimateTotalLinesCount(totalSizeInBytes);
             var poolSize = (int) Math.Ceiling(Math.Cbrt(_totalLinesEstimate * 0.9));
 
+            // Pool are lazy to avoid potentially long-running provider initialisation and to generate pools only on demand
             _firstPool = new(() => GenerateCompaniesPool(poolSize));
             _secondPool = new(() => GenerateCompaniesPool(poolSize));
             _thirdPool = new(() => GenerateCompaniesPool(poolSize));
@@ -44,7 +48,7 @@ namespace Generator.Data
         public string GetLine()
         {
             var number = Random.Shared.Next(1, (int) (_totalLinesEstimate * 0.9));
-            
+
             var first = _firstPool.Value[Random.Shared.Next(_firstPool.Value.Count)];
             var second = _secondPool.Value[Random.Shared.Next(_secondPool.Value.Count)];
             var third = _thirdPool.Value[Random.Shared.Next(_thirdPool.Value.Count)];

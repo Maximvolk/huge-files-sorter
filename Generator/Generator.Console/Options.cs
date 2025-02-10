@@ -9,7 +9,7 @@ namespace Generator.Console
         public string FilePath { get; set; } = "./generated.txt";
 
         [Option('s', "size", Required = true,
-            HelpText = "Generated file size - number of bytes, M, K and G suffixes supported")]
+            HelpText = "Generated file size - integer number of bytes, M, K and G suffixes supported")]
         public string FileSize { get; set; } = null!;
 
         public long FileSizeBytes
@@ -18,13 +18,13 @@ namespace Generator.Console
             {
                 if (FileSize.EndsWith('K'))
                     return long.Parse(FileSize[..^1]) * 1024;
-                
+
                 if (FileSize.EndsWith('M'))
                     return long.Parse(FileSize[..^1]) * 1024 * 1024;
-                
+
                 if (FileSize.EndsWith('G'))
                     return long.Parse(FileSize[..^1]) * 1024 * 1024 * 1024;
-                
+
                 return long.Parse(FileSize);
             }
         }

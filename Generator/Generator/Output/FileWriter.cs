@@ -1,6 +1,6 @@
 ﻿namespace Generator.Output
 {
-    public class FileWriter : IOutputWriter
+    public sealed class FileWriter : IOutputWriter
     {
         private const int _flushBatchSize = 5000;
         private int _currentBatchSize = 0;
@@ -21,7 +21,7 @@
 
             if (_currentBatchSize < _flushBatchSize)
                 return;
-            
+
             _currentBatchSize = 0;
             await _streamWriter.FlushAsync();
         }

@@ -33,7 +33,7 @@ var options = Parser.Default.ParseArguments<Options>(args)
         }
         catch
         {
-            Console.WriteLine("Invalid size, only K, M and G suffixes supported");
+            Console.WriteLine("Invalid size, only integer (big integers) followed by K, M or G suffix supported");
             Environment.Exit(1);
         }
     })
@@ -43,7 +43,7 @@ try
 {
     Console.Write("Generation is in progress... ");
     var progressBar = new ProgressBar();
-    
+
     var watch = new Stopwatch();
     watch.Start();
 

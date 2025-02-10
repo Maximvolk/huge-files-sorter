@@ -15,7 +15,7 @@ namespace Generator
         private readonly IOutputWriter _outputWriter;
         private readonly IProgressObserver _progressObserver;
         private readonly long _targetSizeInBytes;
-        
+
         private readonly int _newLineLength = Encoding.UTF8.GetByteCount(Environment.NewLine);
 
         internal GenerationFacade(IDataProvider dataProvider, IOutputWriter outputWriter,
@@ -70,7 +70,7 @@ namespace Generator
 
                     batch.Add(line);
                 }
-                
+
                 await writer.WriteAsync(batch);
             }
         }
@@ -78,7 +78,7 @@ namespace Generator
         private async Task WriteOutputAsync(ChannelReader<List<string>> reader)
         {
             var bytesWritten = 0L;
-            
+
             await foreach (var batch in reader.ReadAllAsync())
             {
                 foreach (var line in batch)
@@ -89,7 +89,7 @@ namespace Generator
 
                 _progressObserver.ObserveProgress(bytesWritten / (double)_targetSizeInBytes);
             }
-            
+
             _progressObserver.Finish();
         }
 

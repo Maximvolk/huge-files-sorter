@@ -9,6 +9,7 @@ namespace Generator
         {
             // Products provider is good for small files
             // Companies provider supports bigger number of combinations and leads to smaller amount of duplicates on a big files
+            // Target size passed to constructor to create suitable inner pool (for reasonable amount of duplicates)
             IDataProvider dataProvider = targetSizeInBytes switch
             {
                 <1024*1024 => new ProductsDataProvider(targetSizeInBytes),

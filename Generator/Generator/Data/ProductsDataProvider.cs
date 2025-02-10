@@ -3,6 +3,11 @@ using Bogus;
 
 namespace Generator.Data
 {
+    /// <summary>
+    /// Creates lines with product name and short info.
+    /// Suitable for small target size results because combinations amount is pretty small,
+    /// produces many duplicates on bigger sizes
+    /// </summary>
     public class ProductsDataProvider : IDataProvider
     {
         private readonly long _totalLinesEstimate;
@@ -21,6 +26,7 @@ namespace Generator.Data
             _totalLinesEstimate = EstimateTotalLinesCount(totalSizeInBytes);
             var poolSize = (int)Math.Ceiling(Math.Cbrt(_totalLinesEstimate * 0.9));
 
+            // Pool are lazy to avoid potentially long-running provider initialisation and to generate pools only on demand
             _products = new(() => GenerateProductsPool(poolSize));
             _productAdjectives = new(() => GenerateProductAdjectivesPool(poolSize));
             _productMaterials = new(() => GenerateProductMaterialsPool(poolSize));
