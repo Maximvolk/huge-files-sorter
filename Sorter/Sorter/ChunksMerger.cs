@@ -8,18 +8,26 @@ namespace Sorter
         public void MergeSortedChunks(string outputFilePath)
         {
             List<string> chunks;
+            var mergeEpoch = 1;
 
             while ((chunks = Directory.EnumerateFiles(tmpDirectory).ToList()).Count > 1)
             {
-                Console.WriteLine("\nMerge epoch...");
+                Console.WriteLine($"\nMerge epoch {mergeEpoch}...");
+                var chunksLeft = chunks.Count;
                 
                 for (var i = 0; i < chunks.Count; i += MaxOpenChunks)
                 {
                     var chunksBatch = chunks.Skip(i).Take(MaxOpenChunks).ToList();
                     MergeSortedChunksBatch(chunksBatch);
+
+                    chunksLeft -= chunksBatch.Count - 1;
+
+                    Console.WriteLine(chunksLeft == 1
+                        ? "1 chunk left"
+                        : $"{chunksLeft} chunks left");
                 }
 
-                Console.WriteLine($"{chunks.Count} chunks left");
+                mergeEpoch++;
             }
 
             File.Move(chunks[0], outputFilePath, true);

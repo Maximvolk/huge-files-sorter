@@ -2,7 +2,7 @@ namespace Sorter
 {
     public class FilePartitioner(string tmpDirectory)
     {
-        private const int ChunkSize = 10 * 1024 * 1024; // 10 MB
+        private const long ChunkSize = 10 * 1024 * 1024; // 10 MB
         
         public async Task SplitIntoSortedChunksAsync(string inputFilePath)
         {
@@ -11,9 +11,13 @@ namespace Sorter
 
             Console.WriteLine(chunksCount == 1
                 ? "Sorting in memory (only one chunk)..."
-                : $"Splitting into {chunksCount} chunks...");
+                : "Splitting into chunks...");
 
             var maxDegreeOfParallelism = Environment.ProcessorCount;
+            var chunksCreatedCount = 0;
+
+            var originalCursorLeft = Console.CursorLeft;
+            var originalCursorTop = Console.CursorTop;
 
             foreach (var chunkIndices in Enumerable.Range(0, chunksCount).GroupBy(i => i / maxDegreeOfParallelism))
             {
@@ -27,17 +31,22 @@ namespace Sorter
                 
                 await Task.WhenAll(tasks);
 
-                var chunksCreatedCount = chunkIndices.Max() + 1;
+                chunksCreatedCount += chunkIndices.Count();
                 if (chunksCreatedCount > 1)
-                    Console.WriteLine($"{chunkIndices.Max() + 1} chunks created");
+                {
+                    Console.SetCursorPosition(originalCursorLeft, originalCursorTop);
+                    Console.Write($"Created {chunksCreatedCount}/{chunksCount} chunks");
+                }
             }
+
+            Console.WriteLine();
         }
 
         private async Task<List<Line>> ReadChunkAsync(string filePath, int chunkIndex)
         {
             await using var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read, bufferSize: 64 * 1024);
 
-            var startPosition = chunkIndex * ChunkSize;
+            long startPosition = chunkIndex * ChunkSize;
             fileStream.Position = startPosition;
 
             using var streamReader = new StreamReader(fileStream);
