@@ -47,7 +47,7 @@ namespace Generator.Data
 
         public string GetLine()
         {
-            var number = Random.Shared.Next(1, (int) (_totalLinesEstimate * 0.9));
+            var number = Random.Shared.Next(1, (int)Math.Ceiling(_totalLinesEstimate * 0.9));
 
             var first = _firstPool.Value[Random.Shared.Next(_firstPool.Value.Count)];
             var second = _secondPool.Value[Random.Shared.Next(_secondPool.Value.Count)];

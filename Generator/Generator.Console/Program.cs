@@ -29,11 +29,12 @@ var options = Parser.Default.ParseArguments<Options>(args)
 
         try
         {
-            _ = o.FileSizeBytes;
+            if (o.FileSizeBytes <= 0)
+                throw new Exception();
         }
         catch
         {
-            Console.WriteLine("Invalid size, only integer (big integers) followed by K, M or G suffix supported");
+            Console.WriteLine("Invalid size, only positive integer (big integer) followed by K, M or G suffix supported");
             Environment.Exit(1);
         }
     })

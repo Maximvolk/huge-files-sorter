@@ -61,7 +61,7 @@ namespace Generator.Data
 
         public string GetLine()
         {
-            var number = Random.Shared.Next(1, (int)(_totalLinesEstimate * 0.9));
+            var number = Random.Shared.Next(1, (int)Math.Ceiling(_totalLinesEstimate * 0.9));
 
             if (number % 10 == 0)
                 return $"{number}. {_products.Value[Random.Shared.Next(_products.Value.Count)]}";
