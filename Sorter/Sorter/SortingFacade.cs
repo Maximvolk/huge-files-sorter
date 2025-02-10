@@ -1,11 +1,11 @@
 ﻿namespace Sorter
 {
-    public class SortingFacade
+    public class SortingFacade(ILogger logger)
     {
         private const string TmpDirectory = "sorterTmp";
 
-        private readonly ChunksMerger _chunksMerger = new(TmpDirectory);
-        private readonly FilePartitioner _filePartitioner = new(TmpDirectory);
+        private readonly ChunksMerger _chunksMerger = new(TmpDirectory, logger);
+        private readonly FilePartitioner _filePartitioner = new(TmpDirectory, logger);
         
         public async Task SortAsync(string inputFilePath, string outputFilePath)
         {

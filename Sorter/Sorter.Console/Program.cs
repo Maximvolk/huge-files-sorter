@@ -39,9 +39,10 @@ try
     var watch = new Stopwatch();
     watch.Start();
 
-    var sorter = new Sorter.SortingFacade();
-    await sorter.SortAsync(options.Value.InputFilePath, options.Value.OutputFilePath);
+    var logger = new ConsoleLogger();
+    var sorter = new Sorter.SortingFacade(logger);
 
+    await sorter.SortAsync(options.Value.InputFilePath, options.Value.OutputFilePath);
     Console.WriteLine($"Sorting is successfully finished. It took {watch.Elapsed}");
 }
 catch (Exception e)

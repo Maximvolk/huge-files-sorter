@@ -1,6 +1,6 @@
 namespace Sorter
 {
-    public class FilePartitioner(string tmpDirectory)
+    public class FilePartitioner(string tmpDirectory, ILogger logger)
     {
         private const long ChunkSize = 10 * 1024 * 1024; // 10 MB
         
@@ -9,15 +9,14 @@ namespace Sorter
             var fileSizeBytes = new FileInfo(inputFilePath).Length;
             var chunksCount = (int)Math.Ceiling(fileSizeBytes / (double)ChunkSize);
 
-            Console.WriteLine(chunksCount == 1
+            logger.LogLine(chunksCount == 1
                 ? "Sorting in memory (only one chunk)..."
                 : "Splitting into chunks...");
 
             var maxDegreeOfParallelism = Environment.ProcessorCount;
             var chunksCreatedCount = 0;
 
-            var originalCursorLeft = Console.CursorLeft;
-            var originalCursorTop = Console.CursorTop;
+            logger.FixPosition();
 
             foreach (var chunkIndices in Enumerable.Range(0, chunksCount).GroupBy(i => i / maxDegreeOfParallelism))
             {
@@ -33,13 +32,10 @@ namespace Sorter
 
                 chunksCreatedCount += chunkIndices.Count();
                 if (chunksCreatedCount > 1)
-                {
-                    Console.SetCursorPosition(originalCursorLeft, originalCursorTop);
-                    Console.Write($"Created {chunksCreatedCount}/{chunksCount} chunks");
-                }
+                    logger.LogFromFixedPosition($"Created {chunksCreatedCount}/{chunksCount} chunks");
             }
 
-            Console.WriteLine();
+            logger.LogLine("\n");
         }
 
         private async Task<List<Line>> ReadChunkAsync(string filePath, int chunkIndex)

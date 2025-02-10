@@ -1,6 +1,6 @@
 namespace Sorter
 {
-    public class ChunksMerger(string tmpDirectory)
+    public class ChunksMerger(string tmpDirectory, ILogger logger)
     {
         private const int MaxOpenChunks = 100;
 
@@ -12,7 +12,7 @@ namespace Sorter
 
             while ((chunks = Directory.EnumerateFiles(tmpDirectory).ToList()).Count > 1)
             {
-                Console.WriteLine($"\nMerge epoch {mergeEpoch}...");
+                logger.LogLine($"\nMerge epoch {mergeEpoch}...");
                 var chunksLeft = chunks.Count;
                 
                 for (var i = 0; i < chunks.Count; i += MaxOpenChunks)
@@ -22,7 +22,7 @@ namespace Sorter
 
                     chunksLeft -= chunksBatch.Count - 1;
 
-                    Console.WriteLine(chunksLeft == 1
+                    logger.LogLine(chunksLeft == 1
                         ? "1 chunk left"
                         : $"{chunksLeft} chunks left");
                 }
