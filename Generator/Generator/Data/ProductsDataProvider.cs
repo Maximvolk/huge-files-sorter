@@ -13,6 +13,8 @@ namespace Generator.Data
 
         public ProductsDataProvider(long totalSizeInBytes)
         {
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(totalSizeInBytes);
+
             // 3 pools of strings => total combinations number is first * second * third
             // Assuming that all pools have the same size (for simplicity) it equals cube root on total lines
             // 0.9 coefficient is to guarantee duplicate lines (because total number of combinations won't be "enough")
