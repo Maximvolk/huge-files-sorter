@@ -29,13 +29,7 @@ namespace Sorter.Tests
         {
             // Arrange
             var inputFile = Path.Combine(_tempDirectory, "small.txt");
-            await File.WriteAllLinesAsync(inputFile, new[]
-            {
-                "3. bbb",
-                "5. aaa",
-                "1. aaa",
-                "2. ccc"
-            });
+            await File.WriteAllLinesAsync(inputFile, ["3. bbb", "5. aaa", "1. aaa", "2. ccc"]);
 
             // Act
             await _partitioner.SplitIntoSortedChunksAsync(inputFile);
