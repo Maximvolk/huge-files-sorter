@@ -25,7 +25,7 @@
         }
 
         [Test]
-        public void MergeSortedChunks_SingleChunk_CopiesFileToOutput()
+        public void SingleChunk_CopiesFileToOutput()
         {
             // Arrange
             var inputLines = new[] { "3. a", "4. a", "1. b" };
@@ -41,7 +41,7 @@
         }
 
         [Test]
-        public void MergeSortedChunks_MultipleChunks_MergesInSortedOrder()
+        public void MultipleChunks_MergesInSortedOrder()
         {
             // Arrange
             CreateChunkFile(["1. a", "2. d", "4. d"]);
@@ -60,7 +60,7 @@
         }
 
         [Test]
-        public void MergeSortedChunks_ChunksWithOverlappingValues_MergesCorrectly()
+        public void ChunksWithOverlappingValues_MergesCorrectly()
         {
             // Arrange
             CreateChunkFile(["1. a", "3. c", "5. e"]);
@@ -79,7 +79,7 @@
         }
 
         [Test]
-        public void MergeSortedChunks_EmptyChunks_HandlesCorrectly()
+        public void EmptyChunks_HandlesCorrectly()
         {
             // Arrange
             CreateChunkFile(["1. a", "2. b"]);
